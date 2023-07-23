@@ -1,0 +1,81 @@
+#!/usr/bin/env python3
+import hashlib
+import argparse
+from rich.console import Console
+from rich.table import Table
+
+def calculate_hash(data: str, algorithm: str, encoding_time: int) -> str:
+    # Convert the input data to bytes (required by hashlib functions)
+    input_bytes = data.encode('utf-8')
+    
+    # Calculate the hash value using the selected algorithm and encoding time
+    if algorithm == 'md5':
+        hash_object = hashlib.md5(input_bytes)
+    elif algorithm == 'sha1':
+        hash_object = hashlib.sha1(input_bytes)
+    elif algorithm == 'sha256':
+        hash_object = hashlib.sha256(input_bytes)
+    elif algorithm == 'sha512':
+        hash_object = hashlib.sha512(input_bytes)
+    else:
+        raise ValueError(f"Invalid algorithm: {algorithm}")
+    
+    # Perform multiple iterations for encoding time (if specified)
+    for _ in range(encoding_time):
+        hash_object.update(hash_object.hexdigest().encode('utf-8'))
+    
+    # Get the final hash value as a hexadecimal string
+    final_hash = hash_object.hexdigest()
+    
+    return final_hash
+
+def display_results(algorithm: str, encoding_time: int, hash_value: str):
+    # Create a table to display the results using rich
+    table = Table(title="Hash Calculator Results", show_header=True, header_style="bold")
+    table.add_column("Algorithm", style="cyan")
+    table.add_column("Encoding Time", style="magenta")
+    table.add_column("Hash Value", style="yellow")
+    table.add_row(algorithm, str(encoding_time), hash_value)
+    
+    # Print the table using rich
+    console = Console()
+    console.print(table)
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Calculate hash values of a string or file using various algorithms and encoding times.",
+                                     epilog="Supported Algorithms: md5, sha1, sha256, sha512\n\n"
+                                            "Encoding Time:\n"
+                                            "  Use -e option to specify the number of encoding iterations to perform.\n"
+                                            "  For example, '-e 1000' will perform 1000 iterations (default: 1).\n\n"
+                                            "Examples:\n"
+                                            "  python hash_calculator.py -f example.txt -a sha256\n"
+                                            "  python hash_calculator.py -s 'Hello, World!' -a md5 -e 10000\n")
+    parser.add_argument("-f", "--file", type=str, help="Input file path to calculate its hash.")
+    parser.add_argument("-s", "--string", type=str, help="Input string to calculate its hash.")
+    parser.add_argument("-a", "--algorithm", choices=["md5", "sha1", "sha256", "sha512"], default="md5", help="Hashing algorithm to use (default: md5).")
+    parser.add_argument("-e", "--encoding-time", type=int, default=1, help="Number of encoding iterations to perform (default: 1).")
+    args = parser.parse_args()
+    
+    if args.file and args.string:
+        print("Error: Only one of '-f' and '-s' options can be used at a time.")
+    elif args.file:
+        # Calculate hash for the file
+        try:
+            with open(args.file, 'r') as file:
+                data = file.read()
+            hash_value = calculate_hash(data, args.algorithm, args.encoding_time)
+            display_results(args.algorithm.upper(), args.encoding_time, hash_value)
+        except FileNotFoundError:
+            print(f"Error: File not found: {args.file}")
+        except ValueError as e:
+            print(e)
+    elif args.string:
+        # Calculate hash for the input string
+        try:
+            hash_value = calculate_hash(args.string, args.algorithm, args.encoding_time)
+            display_results(args.algorithm.upper(), args.encoding_time, hash_value)
+        except ValueError as e:
+            print(e)
+    else:
+        print("Error: Please provide either '-f' for file input or '-s' for string input.")
+
