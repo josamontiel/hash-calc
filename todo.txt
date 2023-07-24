@@ -1,6 +1,0 @@
-Hash Calulator TODO:
-	1. hmac
-	2. hashlib
-	3. base64
-
-Takes in a phrase or reads over text file, analyzes the text and outputs a hash corresponding with said text.
