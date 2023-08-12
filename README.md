@@ -25,20 +25,32 @@ To mitigate this risk, **salting** is introduced. A salt is a random value that 
 
 In summary, salting adds an extra layer of security to hashes, making them more resistant to various attacks, including dictionary attacks and rainbow table attacks.
 
-## How to Use the Python Hashing Calculator
 
-1. **Installation**:
+## Hashing Example:
+Let's say you have a simple hashing calculator that takes a user's password as input and generates a hash as output. Here's an example:
 
-   Ensure you have Python 3.11 installed on your system. Clone this repository and navigate to the project directory.
-2. **Dependencies**:
+**Input:**
+Password: `mysecretpassword`
 
-   The Python Hashing Calculator requires you to have the `rich` python library. It can be downladed by executing the following command: `pip install rich`
-3. **Running the Program**:
+**Output:**
+Hashed Password: `b5f1a7b9c84bcf57e70a9b6a8bc8c92a`
 
-   Open a terminal or command prompt and navigate to the folder containing the script, give the script permission to execute by running the `chmod +x calc` command. Afret permissions have been grantd, run the script by executing the `./calc` command. Follow the on-screen instructions to input your data and choose the hash algorithm.
-4. **Supported Hash Algorithms**:
+In this example, the user's password "mysecretpassword" is hashed using your hashing algorithm, and the resulting hash is `b5f1a7b9c84bcf57e70a9b6a8bc8c92a`.
 
-   The Python Hashing Calculator supports commonly used hash algorithms such as MD5, SHA-1, SHA-256, SHA-512, etc. The availability of specific algorithms may depend on your Python version.
+**Hashing with Salt Example:**
+Using a salt adds an extra layer of security to the hashing process. A salt is a random value that is combined with the password before hashing. This helps prevent attackers from using precomputed tables (rainbow tables) to crack passwords more easily.
+
+**Input:**
+Password: `mysecretpassword`
+Salt: `s8d1f6a2`
+
+**Output:**
+Hashed Password (with Salt): `3eab95ed40eaae580ac736c6d78c1a23`
+
+In this example, the user's password "mysecretpassword" is combined with the salt "s8d1f6a2" before being hashed. The resulting hash is `3eab95ed40eaae580ac736c6d78c1a23`.
+
+> Remember that the actual output hashes will depend on the specific hashing algorithm you're using and the way you combine the password and salt. The examples above are based on the assumption of a basic hashing algorithm and concatenation of password and salt. In practice, using established cryptographic libraries and standards is highly recommended for secure hashing and salting.
+
 
 ## Disclaimer
 
